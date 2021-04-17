@@ -82,6 +82,8 @@ export default {
   },
   mounted () {
     /* console.log(this.$router.history.current.params.myid) */
+    this.$store.commit('hideTabbar')
+
     http({
       url: `/gateway?filmId=${this.$router.history.current.params.myid}&k=961793`,
       headers: {
@@ -102,6 +104,9 @@ export default {
         loop: false
       })
     }
+  },
+  beforeDestroy () {
+    this.$store.commit('showTabbar')
   }
 }
 </script>

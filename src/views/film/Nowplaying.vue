@@ -31,7 +31,7 @@ export default {
   },
   mounted () {
     http({
-      url: '/gateway?cityId=310100&pageNum=1&pageSize=10&type=1&k=9109303',
+      url: `/gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=1&k=9109303`,
       headers: {
         'X-Host': 'mall.film-ticket.film.list'
       }
@@ -45,13 +45,13 @@ export default {
       this.$router.push(`/detail/${id}`)
     },
     onLoad () {
-      if (this.datalist.length === this.total) {
+      if (this.datalist.length === this.total && this.datalist.length !== 0) {
         this.finished = true
         return
       }
       this.current++
       http({
-        url: `/gateway?cityId=310100&pageNum=${this.current}&pageSize=10&type=1&k=9109303`,
+        url: `/gateway?cityId=${this.$store.state.cityId}&pageNum=${this.current}&pageSize=10&type=1&k=9109303`,
         headers: {
           'X-Host': 'mall.film-ticket.film.list'
         }

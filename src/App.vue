@@ -1,9 +1,9 @@
 <template>
   <div>
+    <tabbar v-show="$store.state.isTabbarShow"></tabbar>
     <section>
       <router-view></router-view>
     </section>
-    <tabbar></tabbar>
   </div>
 </template>
 

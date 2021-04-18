@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="影院" left-arrow @click-left="onClickLeft">
+    <van-nav-bar title="影院" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
       <template #left>
         {{ $store.state.cityName }}<van-icon name="arrow-down" size="18" color="#7A7A7B" />
       </template>
@@ -9,45 +9,51 @@
       </template>
     </van-nav-bar>
     <div class="cinema" :style="{height:height}">
-      <ul>
-        <li v-for="data in cinemalist" :key="data.cinemaId">
+      <van-list>
+        <van-cell v-for="data in $store.state.cinemaList" :key="data.cinemaId">
           <div>{{data.name}}</div>
           <div class="address">{{data.address}}</div>
-        </li>
-      </ul>
+        </van-cell>
+      </van-list>
     </div>
   </div>
 </template>
 
 <script>
-import http from '@/util/http'
-import BetterScroll from 'better-scroll'
 import Vue from 'vue'
-import { NavBar, Icon } from 'vant'
-Vue.use(NavBar).use(Icon)
+import BetterScroll from 'better-scroll'
+import { NavBar, Icon, List, Cell } from 'vant'
+Vue.use(NavBar).use(Icon).use(List).use(Cell)
 
 export default {
   data () {
     return {
-      cinemalist: [],
       height: 0
     }
   },
   methods: {
     onClickLeft () {
+      /* 清空数组 */
+      this.$store.commit('clearCinemaList')
       this.$router.push('/city')
+    },
+    onClickRight () {
+      this.$router.push('/cinema/search')
     }
   },
   mounted () {
     this.height = document.documentElement.clientHeight - 100 + 'px'
-    http({
-      url: `/gateway?cityId=${this.$store.state.cityId}&ticketFlag=1&k=1353571`,
-      headers: {
-        'X-Host': 'mall.film-ticket.cinema.list'
-      }
-    }).then(res => {
-      this.cinemalist = res.data.data.cinemas
-
+    if (this.$store.state.cinemaList.length === 0) {
+      this.$store.dispatch('getCinemaList', this.$store.state.cityId).then(res => {
+        this.$nextTick(() => {
+          new BetterScroll('.cinema', {
+            scrollbar: {
+              fade: true
+            }
+          })
+        })
+      })
+    } else {
       this.$nextTick(() => {
         new BetterScroll('.cinema', {
           scrollbar: {
@@ -55,7 +61,7 @@ export default {
           }
         })
       })
-    })
+    }
   }
 }
 </script>

@@ -70,7 +70,7 @@ export default {
         padding: 10px;
         img {
             float: left;
-            width: 100px;
+            width: 80px;
         }
         p {
             overflow: hidden;

@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="影院" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
       <template #left>
-        {{ $store.state.cityName }}<van-icon name="arrow-down" size="18" color="#7A7A7B" />
+        {{ cityName }}<van-icon name="arrow-down" size="18" color="#7A7A7B" />
       </template>
       <template #right>
         <van-icon name="search" size="23" color="#7A7A7B" />
@@ -10,7 +10,7 @@
     </van-nav-bar>
     <div class="cinema" :style="{height:height}">
       <van-list>
-        <van-cell v-for="data in $store.state.cinemaList" :key="data.cinemaId">
+        <van-cell v-for="data in cinemaList" :key="data.cinemaId">
           <div>{{data.name}}</div>
           <div class="address">{{data.address}}</div>
         </van-cell>
@@ -23,6 +23,7 @@
 import Vue from 'vue'
 import BetterScroll from 'better-scroll'
 import { NavBar, Icon, List, Cell } from 'vant'
+import { mapActions, mapMutations, mapState } from 'vuex'
 Vue.use(NavBar).use(Icon).use(List).use(Cell)
 
 export default {
@@ -31,10 +32,16 @@ export default {
       height: 0
     }
   },
+  computed: {
+    ...mapState('CinemaModule', ['cinemaList']),
+    ...mapState('CityModule', ['cityId', 'cityName'])
+  },
   methods: {
+    ...mapActions('CinemaModule', ['getCinemaList']),
+    ...mapMutations('CinemaModule', ['clearCinemaList']),
     onClickLeft () {
       /* 清空数组 */
-      this.$store.commit('clearCinemaList')
+      this.clearCinemaList()
       this.$router.push('/city')
     },
     onClickRight () {
@@ -43,8 +50,8 @@ export default {
   },
   mounted () {
     this.height = document.documentElement.clientHeight - 100 + 'px'
-    if (this.$store.state.cinemaList.length === 0) {
-      this.$store.dispatch('getCinemaList', this.$store.state.cityId).then(res => {
+    if (this.cinemaList.length === 0) {
+      this.getCinemaList(this.cityId).then(res => {
         this.$nextTick(() => {
           new BetterScroll('.cinema', {
             scrollbar: {

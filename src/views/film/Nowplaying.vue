@@ -14,6 +14,7 @@
 import http from '@/util/http.js'
 import Vue from 'vue'
 import { List, Cell } from 'vant'
+import { mapState } from 'vuex'
 Vue.filter('actorFilter', (actors) => {
   if (actors === undefined) return '暂无主演'
   return actors.map(item => item.name).join(' ')
@@ -29,9 +30,12 @@ export default {
       total: 0
     }
   },
+  computed: {
+    ...mapState('CityModule', ['cityId'])
+  },
   mounted () {
     http({
-      url: `/gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=1&k=9109303`,
+      url: `/gateway?cityId=${this.cityId}&pageNum=1&pageSize=10&type=1&k=9109303`,
       headers: {
         'X-Host': 'mall.film-ticket.film.list'
       }
@@ -51,7 +55,7 @@ export default {
       }
       this.current++
       http({
-        url: `/gateway?cityId=${this.$store.state.cityId}&pageNum=${this.current}&pageSize=10&type=1&k=9109303`,
+        url: `/gateway?cityId=${this.cityId}&pageNum=${this.current}&pageSize=10&type=1&k=9109303`,
         headers: {
           'X-Host': 'mall.film-ticket.film.list'
         }

@@ -13,6 +13,7 @@
 import Vue from 'vue'
 import { IndexBar, IndexAnchor, Cell, Toast } from 'vant'
 import http from '../util/http'
+import { mapMutations } from 'vuex'
 
 Vue.use(IndexBar).use(IndexAnchor).use(Cell)
 export default {
@@ -38,6 +39,7 @@ export default {
     })
   },
   methods: {
+    ...mapMutations('CityModule', ['changeCityName', 'changeCityId']),
     handleCityData (cities) {
       const letterArr = []
       const newCities = []
@@ -59,8 +61,8 @@ export default {
       Toast(index)
     },
     handleChangePage (name, cityId) {
-      this.$store.commit('changeCityName', name)
-      this.$store.commit('changeCityId', cityId)
+      this.changeCityName(name)
+      this.changeCityId(cityId)
       this.$router.back()
     }
   }

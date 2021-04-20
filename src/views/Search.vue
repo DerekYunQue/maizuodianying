@@ -13,6 +13,7 @@
 <script>
 import Vue from 'vue'
 import { Search, List, Cell } from 'vant'
+import { mapActions, mapState } from 'vuex'
 Vue.use(Search).use(List).use(Cell)
 
 export default {
@@ -22,19 +23,22 @@ export default {
     }
   },
   computed: {
+    ...mapState('CinemaModule', ['cinemaList']),
+    ...mapState('CityModule', ['cityId']),
     computedCinemaList () {
       if (this.value === '') return []
-      return this.$store.state.cinemaList.filter(item => item.name.toUpperCase().includes(this.value.toUpperCase()) || item.address.toUpperCase().includes(this.value.toUpperCase()))
+      return this.cinemaList.filter(item => item.name.toUpperCase().includes(this.value.toUpperCase()) || item.address.toUpperCase().includes(this.value.toUpperCase()))
     }
   },
   methods: {
+    ...mapActions('CinemaModule', ['getCinemaList']),
     onCancel () {
       this.$router.replace('/cinema')
     }
   },
   mounted () {
-    if (this.$store.state.cinemaList.length === 0) {
-      this.$store.dispatch('getCinemaList', this.$store.state.cityId)
+    if (this.cinemaList.length === 0) {
+      this.getCinemaList(this.cityId)
     }
   }
 }

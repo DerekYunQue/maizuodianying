@@ -1,30 +1,43 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <tabbar v-show="isTabbarShow"></tabbar>
+  <section>
+    <router-view/>
+  </section>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import tabbar from '@/components/Tabbar.vue'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+export default {
+  components: {
+    tabbar
+  },
+  setup () {
+    const store = useStore()
+    return {
+      isTabbarShow: computed(() => store.state.TabbarModule.isTabbarShow)
     }
   }
 }
+</script>
+
+<style>
+  li{
+    list-style: none;
+  }
+  *{
+    margin:0;
+    padding: 0;
+    touch-action: manipulation
+  }
+  html,body{
+    height: 100%;
+  }
+  a{
+    text-decoration: none;
+  }
+  section{
+    padding-bottom: 50px;
+  }
 </style>
